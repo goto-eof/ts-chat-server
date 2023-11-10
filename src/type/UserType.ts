@@ -6,13 +6,14 @@ export const typeDefs = gql`
     getUser(id: Int!): User
   }
   type Mutation {
-    addUser(user: UserIn): Boolean!
+    addUser(user: UserIn): User
   }
   type User {
     id: Int!
     firstName: String!
     lastName: String!
-    age: Int!
+    username: String!
+    password: String!
   }
   
   input UserIn {

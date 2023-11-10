@@ -11,20 +11,17 @@ export const resolvers = {
     },
     Mutation: {
         addUser: async (_: any, args: any) => {
-            const {firstName, lastName, username, password} = args;
             try {
                 const user = User.create({
-                    firstName,
-                    lastName,
-                    username,
-                    password
+                    firstName: args.user.firstName,
+                    lastName: args.user.lastName,
+                    username: args.user.username,
+                    password: args.user.password
                 });
-
-                await user.save();
-
-                return true;
+                console.log(user);
+                return await user.save();
             } catch (error) {
-                return false;
+                return null;
             }
         }
     }
