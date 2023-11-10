@@ -13,7 +13,7 @@ export default class User extends BaseEntity {
     @Column({name: "first_name"})
     firstName: string;
 
-    @Field(() => String)
+    @Field(() => String, {name: "lastName"})
     @Column({name: "last_name"})
     lastName: string;
 
@@ -23,4 +23,8 @@ export default class User extends BaseEntity {
 
     @Column()
     password: string;
+
+    @Column()
+    @Field(() => String)
+    email: string;
 }

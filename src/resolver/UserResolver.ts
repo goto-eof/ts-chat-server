@@ -1,28 +1,35 @@
 import User from "../entity/User";
+import {Arg, Mutation, Query, Resolver} from "type-graphql";
+import UserCreateInput from "../input/UserCreateInput";
 
-// Provide resolver functions for your schema fields
-export const resolvers = {
-    Query: {
-        getUser: async (_: any, args: any) => {
-            const {id} = args;
+@Resolver()
+export class UserResolver {
+    @Query(() => User)
+    async getUser(@Arg("id") id: number) {
+        return await User.findOne({where: {id: id}});
+    }
 
-            return await User.findOne({where: {id: id}});
-        }
-    },
-    Mutation: {
-        addUser: async (_: any, args: any) => {
-            try {
-                const user = User.create({
-                    firstName: args.user.firstName,
-                    lastName: args.user.lastName,
-                    username: args.user.username,
-                    password: args.user.password
-                });
-                console.log(user);
-                return await user.save();
-            } catch (error) {
-                return null;
-            }
+    @Query(() => [User])
+    async getUsers(): Promise<Array<User>> {
+        return await User.find();
+    }
+
+    @Mutation(() => User, {nullable: true})
+    async addUser(@Arg("user") userIn: UserCreateInput): Promise<User | null> {
+        console.log("ciao")
+        try {
+            const user = User.create({
+                firstName: userIn.firstName,
+                lastName: userIn.lastName,
+                username: userIn.username,
+                password: userIn.password,
+                email: userIn.email
+            });
+            console.log(user);
+            return await user.save();
+        } catch (error) {
+            return null;
         }
     }
-};
+
+}

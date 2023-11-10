@@ -2,12 +2,13 @@ import "reflect-metadata";
 import * as express from "express";
 import {ApolloServer} from "apollo-server-express";
 
-import {typeDefs} from "./type/UserType";
-import {resolvers} from "./resolver/UserResolver";
 import {AppDataSource} from "./config/DataSource";
+import {buildSchema} from "type-graphql";
+import {UserResolver} from "./resolver/UserResolver";
 
 const startServer = async () => {
-    const server = new ApolloServer({typeDefs, resolvers});
+    const schema = await buildSchema({ resolvers: [ UserResolver] });
+    const server = new ApolloServer({ schema });
     require('dotenv').config();
     AppDataSource.initialize()
         .then(() => {
