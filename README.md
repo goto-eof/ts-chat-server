@@ -8,4 +8,7 @@ typeorm init --name apollo-server-boilerplate --database postgres
 yarn add express graphql apollo-server-express
 yarn add -D @types/express @types/graphql
 
+
+typeorm migration:create /myPath/myMigrationName
+npx typeorm-ts-node-commonjs migration:run -d src/config/DataSource.ts
 ```
