@@ -1,0 +1,17 @@
+{
+  "name": "websoket-chat-server",
+  "version": "1.0.0",
+  "description": "Websoket chat server",
+  "main": "index.js",
+  "repository": "https://github.com/goto-eof/websoket-chat-server",
+  "author": "Andrei Dodu",
+  "license": "GPL 2",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^20.9.0",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
