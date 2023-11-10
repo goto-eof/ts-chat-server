@@ -7,11 +7,22 @@
   "author": "Andrei Dodu",
   "license": "GPL 2",
   "private": true,
+  "scripts": {
+    "start": "nodemon -w src --ext ts --exec ts-node src/index.ts",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "schemadrop": "typeorm schema:drop",
+    "schemasync": "typeorm schema:sync",
+    "migrationrun": "typeorm migration:run",
+    "migrationrevert": "typeorm migration:revert",
+    "migration:new": "cd src/migration && npx typeorm migration:create -n migration"
+  },
   "dependencies": {
     "@types/node": "^20.9.0",
     "apollo-server-express": "^3.12.1",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "graphql": "^16.8.1",
+    "pg": "^8.11.3",
     "typeorm": "^0.3.17",
     "typescript": "^5.2.2"
   },
