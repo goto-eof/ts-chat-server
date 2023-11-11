@@ -5,10 +5,11 @@ import {ApolloServer} from "apollo-server-express";
 import {AppDataSource} from "./config/DataSource";
 import {buildSchema} from "type-graphql";
 import {UserResolver} from "./resolver/UserResolver";
+import {MessageResolver} from "./resolver/MessageResolver";
 
 const startServer = async () => {
-    const schema = await buildSchema({ resolvers: [ UserResolver] });
-    const server = new ApolloServer({ schema });
+    const schema = await buildSchema({resolvers: [MessageResolver, UserResolver]});
+    const server = new ApolloServer({schema});
     require('dotenv').config();
     AppDataSource.initialize()
         .then(() => {

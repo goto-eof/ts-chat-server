@@ -1,6 +1,7 @@
 import User from "../entity/User";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import UserCreateInput from "../input/UserCreateInput";
+import ApplicationError from "../error/ApplicationError";
 
 @Resolver()
 export class UserResolver {
@@ -28,8 +29,18 @@ export class UserResolver {
             console.log(user);
             return await user.save();
         } catch (error) {
-            return null;
+            throw new ApplicationError("Unable to save data: " + error);
         }
+    }
+
+    @Mutation(() => Boolean, {nullable: false})
+    async deleteUser(@Arg("id") id: number): Promise<boolean> {
+        const user = await User.findOne({where: {id}});
+        if (!user) {
+            throw new Error("User not found :|");
+        }
+        await user.remove();
+        return true;
     }
 
 }

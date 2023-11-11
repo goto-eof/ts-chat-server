@@ -1,5 +1,6 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Field, ID, ObjectType} from "type-graphql";
+import Message from "./Message";
 
 @Entity({name: "user"})
 @ObjectType()
@@ -27,4 +28,10 @@ export default class User extends BaseEntity {
     @Column()
     @Field(() => String)
     email: string;
+
+    @OneToMany(() => Message, (message) => message.fromUser)
+    messagesReceived: Message[]
+
+    @OneToMany(() => Message, (message) => message.toUser)
+    messagesSent: Message[]
 }

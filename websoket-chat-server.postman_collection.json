@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "39dbea85-4768-4ad8-9145-629271888b65",
+		"name": "websoket-chat-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3791908"
+	},
+	"item": [
+		{
+			"name": "retrieveUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query retrieveUser{\n    getUser(id: 21){\n        id\n            email\n            username\n\n\n    }\n}",
+						"variables": "{\n    \"todo\": {\n        \"text\":\"Ciao mondo\",\n        \"user\": {\n            \"id\":1\n        }\n\n    }\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "retrieveUser Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query retrieveMessage{\n    getMessage(id: 32){\n        id\n        message\n        insertDate\n        fromUser{\n            id\n            username\n        }\n        toUser{\n            id\n            username\n        }\n\n    }\n}",
+						"variables": "{\n    \"todo\": {\n        \"text\":\"Ciao mondo\",\n        \"user\": {\n            \"id\":1\n        }\n\n    }\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "retrieveUsers",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query retrieveUsers{\n    getUsers{\n        id\n        email\n        username\n    }\n}",
+						"variables": "{\n    \"todo\": {\n        \"text\":\"Ciao mondo\",\n        \"user\": {\n            \"id\":1\n        }\n\n    }\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation createUser($userIn: UserCreateInput!){\n         addUser(user: $userIn){\n            id\n            username\n            firstName\n            lastName\n        }\n    }\n",
+						"variables": "{\n        \"userIn\": {\n            \"username\":\"mario.asd\",\n            \"password\":\"123456\",\n            \"lastName\":\"Rossi\",\n            \"firstName\": \"Mario\",\n            \"email\": \"cia@ama.nc\"\n        }\n    }"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createMessage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation createMessage($messageIn: MessageCreateInput!){\n         addMessage(message: $messageIn){\n            id\n            message\n            insertDate\n            fromUser {\n                username\n            }\n        }\n    }\n",
+						"variables": "{\n        \"messageIn\": {\n            \"message\":\"marioasd\",\n            \"userTo\":34,\n            \"userFrom\":34\n        }\n    }"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation removeUser{\n         deleteUser(id: 30)\n    }\n",
+						"variables": "{\n        \"userIn\": {\n            \"username\":\"mario.neri\",\n            \"password\":\"123456\",\n            \"lastName\":\"Rossi\",\n            \"firstName\": \"Mario\",\n            \"email\": \"cia@ama.com\"\n        }\n    }"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
