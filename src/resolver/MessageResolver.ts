@@ -8,18 +8,23 @@ import MessageCreateInput from "../input/MessageCreateInput";
 export class MessageResolver {
     @Query(() => Message)
     async getMessage(@Arg("id") id: number) {
-        const message = await Message.findOne({where: {id: id}});
-        return message;
+        return await Message.findOne({where: {id: id}});
     }
 
-    @Query(() => [User])
-    async getMessages(@Arg("withId") withId: number): Promise<Array<Message>> {
-        return await Message.createQueryBuilder("user").where("message.toUser.id = :toUser or message.fromUser.id = :fromUser",
-            {
-                toUser: withId,
-                fromUser: withId
-            }
-        ).getMany();
+    @Query(() => [Message])
+    async getMessages(@Arg("fromId") fromId: number, @Arg("toId") toId: number): Promise<Array<Message>> {
+        return await Message.createQueryBuilder()
+            .select("message")
+            .from(Message, "message")
+            .leftJoinAndSelect("message.fromUser", "fromUser")
+            .leftJoinAndSelect("message.toUser", "toUser")
+            .where("message.toUser.id in  (:...ids) and message.fromUser.id in (:...ids)",
+                {
+                    ids: [toId, fromId],
+                }
+            )
+            .orderBy("message.insertDate", "ASC")
+            .getMany();
     }
 
     @Mutation(() => Message, {nullable: true})
@@ -34,7 +39,8 @@ export class MessageResolver {
                 message: messageIn.message
             });
             console.log(message);
-            return await message.save();
+            const newMessage = await message.save()
+            return await Message.findOne({where: {id: newMessage.id}});
         } catch (error) {
             throw new ApplicationError("Unable to save data: " + error);
         }
