@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import * as express from "express";
 import {ApolloServer} from "apollo-server-express";
-
+import * as dotenv from "dotenv";
 import {AppDataSource} from "./config/DataSource";
 import {buildSchema} from "type-graphql";
 import {UserResolver} from "./resolver/UserResolver";
 import {MessageResolver} from "./resolver/MessageResolver";
-
+dotenv.config();
 const startServer = async () => {
     const schema = await buildSchema({resolvers: [MessageResolver, UserResolver]});
     const server = new ApolloServer({schema});

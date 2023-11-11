@@ -2,6 +2,9 @@ import User from "../entity/User";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import UserCreateInput from "../input/UserCreateInput";
 import ApplicationError from "../error/ApplicationError";
+import {hash} from 'bcrypt'
+import { sign} from 'jsonwebtoken'
+import UserOutput from "../output/UserOutput";
 
 @Resolver()
 export class UserResolver {
@@ -15,19 +18,24 @@ export class UserResolver {
         return await User.find();
     }
 
-    @Mutation(() => User, {nullable: true})
-    async addUser(@Arg("user") userIn: UserCreateInput): Promise<User | null> {
+    @Mutation(() => UserOutput, {nullable: true})
+    async addUser(@Arg("user") userIn: UserCreateInput): Promise<UserOutput | null> {
         console.log("ciao")
         try {
+            const password = await hash(userIn.password, 10);
             const user = User.create({
                 firstName: userIn.firstName,
                 lastName: userIn.lastName,
                 username: userIn.username,
-                password: userIn.password,
+                password: password,
                 email: userIn.email
             });
             console.log(user);
-            return await user.save();
+            const userSaved = await user.save();
+            const jwtToken = sign({email: userIn.email, id: userSaved.id}, process.env.JWT_KEY!, {
+                expiresIn: '7 days'
+            })
+            return {user: userSaved, jwt: jwtToken};
         } catch (error) {
             throw new ApplicationError("Unable to save data: " + error);
         }
