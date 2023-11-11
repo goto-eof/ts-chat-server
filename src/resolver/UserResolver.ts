@@ -2,15 +2,35 @@ import User from "../entity/User";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import UserCreateInput from "../input/UserCreateInput";
 import ApplicationError from "../error/ApplicationError";
-import {hash} from 'bcrypt'
-import { sign} from 'jsonwebtoken'
+import {compare, hash} from 'bcrypt'
+import {sign} from 'jsonwebtoken'
 import UserOutput from "../output/UserOutput";
+import UserSignIn from "../input/UserSignIn";
+import {userService} from "../service/UserService";
+import {GraphQLError} from "graphql";
 
 @Resolver()
 export class UserResolver {
     @Query(() => User)
     async getUser(@Arg("id") id: number) {
         return await User.findOne({where: {id: id}});
+    }
+
+
+    @Query(() => UserOutput)
+    async signIn(@Arg("user") user: UserSignIn): Promise<UserOutput> {
+        const userFound = await userService.findOneByEmail(user.email);
+        if (!userFound === null) {
+            throw new GraphQLError("User not found");
+        }
+        const bcryptPasswordMatch = compare(user.password, userFound!.password);
+        if (!bcryptPasswordMatch) {
+            throw new GraphQLError("Password does not match");
+        }
+        const jwtToken = sign({email: userFound!.email, id: userFound!.id}, process.env.JWT_KEY!, {
+            expiresIn: '7 days'
+        })
+        return {user: userFound!, jwt: jwtToken};
     }
 
     @Query(() => [User])

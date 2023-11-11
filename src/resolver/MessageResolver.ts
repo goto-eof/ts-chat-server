@@ -1,8 +1,8 @@
 import User from "../entity/User";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
-import ApplicationError from "../error/ApplicationError";
 import Message from "../entity/Message";
 import MessageCreateInput from "../input/MessageCreateInput";
+import {GraphQLError} from 'graphql';
 
 @Resolver()
 export class MessageResolver {
@@ -42,7 +42,7 @@ export class MessageResolver {
             const newMessage = await message.save()
             return await Message.findOne({where: {id: newMessage.id}});
         } catch (error) {
-            throw new ApplicationError("Unable to save data: " + error);
+            throw new GraphQLError("Unable to save data: " + error);
         }
     }
 
