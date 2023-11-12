@@ -1,4 +1,3 @@
-import User from "../entity/User";
 import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import Message from "../entity/Message";
 import MessageCreateInput from "../input/MessageCreateInput";
@@ -31,11 +30,9 @@ export class MessageResolver {
     async addMessage(@Arg("message") messageIn: MessageCreateInput): Promise<Message | null> {
         console.log("ciao")
         try {
-            const userFrom = await User.findOne({where: {id: messageIn.userFrom}});
-            const userTo = await User.findOne({where: {id: messageIn.userTo}});
             const message = Message.create({
-                fromUser: userFrom!,
-                toUser: userTo!,
+                fromUser: {id: messageIn.userFrom},
+                toUser: {id: messageIn.userTo},
                 message: messageIn.message
             });
             console.log(message);

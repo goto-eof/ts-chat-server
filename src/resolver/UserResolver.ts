@@ -1,5 +1,5 @@
 import User from "../entity/User";
-import {Arg, Mutation, Query, Resolver} from "type-graphql";
+import {Arg, Ctx, Mutation, Query, Resolver} from "type-graphql";
 import UserCreateInput from "../input/UserCreateInput";
 import ApplicationError from "../error/ApplicationError";
 import {compare, hash} from 'bcrypt'
@@ -8,6 +8,7 @@ import UserOutput from "../output/UserOutput";
 import UserSignIn from "../input/UserSignIn";
 import {userService} from "../service/UserService";
 import {GraphQLError} from "graphql";
+import {MyContext} from "../index";
 
 @Resolver()
 export class UserResolver {
@@ -18,7 +19,8 @@ export class UserResolver {
 
 
     @Query(() => UserOutput)
-    async signIn(@Arg("user") user: UserSignIn): Promise<UserOutput> {
+    async signIn(@Ctx() context: MyContext, @Arg("user") user: UserSignIn): Promise<UserOutput> {
+        console.log(context);
         const userFound = await userService.findOneByEmail(user.email);
         if (!userFound === null) {
             throw new GraphQLError("User not found");
