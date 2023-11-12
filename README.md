@@ -1,3 +1,18 @@
+Install libraries
+```javascript
+yarn install
+```
+Start migration
+```javascript
+npx typeorm-ts-node-commonjs migration:run -d src/config/DataSource.ts
+```
+Start application
+```javascript
+yarn start
+```
+Test it using `postman_collection.json`.
+
+Some commands
 ```javascript
 yarn init
 yarn add @types/node typescript
