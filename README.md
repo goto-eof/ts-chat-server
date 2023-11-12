@@ -16,6 +16,8 @@ Start application
 yarn start
 ```
 
+GraphQL endpoint: `http://localhost:4000/grapql`.
+
 Test it using `postman_collection.json`.
 
 Technologies/Tools: TypeScript, Apollo Server (GraphQL), TypeORM, PostgreSQL, NodeJS, ExpressJS, Socket.io
