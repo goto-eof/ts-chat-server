@@ -11,5 +11,6 @@ const dataSourceOptions: DataSourceOptions = {
     logging: true,
     entities: ['src/entity/*.ts'],
     migrations: ['src/database/migration/*.ts'],
+    migrationsRun: true
 };
 export const AppDataSource = new DataSource(dataSourceOptions);

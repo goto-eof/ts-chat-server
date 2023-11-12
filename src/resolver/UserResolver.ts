@@ -9,10 +9,12 @@ import UserSignIn from "../input/UserSignIn";
 import {userService} from "../service/UserService";
 import {GraphQLError} from "graphql";
 import {MyContext} from "../index";
+import AuthGuard from "../decorator/AuthGuard";
 
 @Resolver()
 export class UserResolver {
     @Query(() => User)
+    @AuthGuard
     async getUser(@Arg("id") id: number) {
         return await User.findOne({where: {id: id}});
     }
@@ -20,6 +22,7 @@ export class UserResolver {
 
     @Query(() => UserOutput)
     async signIn(@Ctx() context: MyContext, @Arg("user") user: UserSignIn): Promise<UserOutput> {
+
         console.log(context);
         const userFound = await userService.findOneByEmail(user.email);
         if (!userFound === null) {
@@ -36,11 +39,14 @@ export class UserResolver {
     }
 
     @Query(() => [User])
-    async getUsers(): Promise<Array<User>> {
+    @AuthGuard
+    async getUsers(@Ctx() context: MyContext): Promise<Array<User>> {
+
         return await User.find();
     }
 
     @Mutation(() => UserOutput, {nullable: true})
+    @AuthGuard
     async addUser(@Arg("user") userIn: UserCreateInput): Promise<UserOutput | null> {
         console.log("ciao")
         try {
@@ -64,6 +70,7 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean, {nullable: false})
+    @AuthGuard
     async deleteUser(@Arg("id") id: number): Promise<boolean> {
         const user = await User.findOne({where: {id}});
         if (!user) {

@@ -8,15 +8,26 @@ import {UserResolver} from "./resolver/UserResolver";
 import {MessageResolver} from "./resolver/MessageResolver";
 import {verify} from "jsonwebtoken";
 import UserOutput from "./output/UserOutput";
+import * as http from "http";
+import {Server, Socket} from "socket.io";
 
 export interface MyContext extends ExpressContext {
     currentUser: UserOutput,
     authorized: boolean
 }
 
+declare global {
+    namespace Express {
+        interface Request {
+            socketIo?: Socket
+        }
+    }
+}
+
 dotenv.config();
 const startServer = async () => {
     const schema = await buildSchema({resolvers: [MessageResolver, UserResolver]});
+
     const server = new ApolloServer({
         schema, context: ({req, res}) => {
             if (!req.headers?.authorization) {
@@ -41,6 +52,17 @@ const startServer = async () => {
 
     await server.start();
     const app = express();
+
+    const httpServer = http.createServer(app);
+    const io = new Server(httpServer, {
+        cors: {
+            origin: "http://127.0.0.1:5500"
+        }
+    })
+
+    io.on('connection', (socket) => {
+        app.request.socketIo = socket
+    })
 
     server.applyMiddleware({app});
 

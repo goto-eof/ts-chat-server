@@ -2,15 +2,18 @@ import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import Message from "../entity/Message";
 import MessageCreateInput from "../input/MessageCreateInput";
 import {GraphQLError} from 'graphql';
+import AuthGuard from "../decorator/AuthGuard";
 
 @Resolver()
 export class MessageResolver {
     @Query(() => Message)
+    @AuthGuard
     async getMessage(@Arg("id") id: number) {
         return await Message.findOne({where: {id: id}});
     }
 
     @Query(() => [Message])
+    @AuthGuard
     async getMessages(@Arg("fromId") fromId: number, @Arg("toId") toId: number): Promise<Array<Message>> {
         return await Message.createQueryBuilder()
             .select("message")
@@ -27,6 +30,7 @@ export class MessageResolver {
     }
 
     @Mutation(() => Message, {nullable: true})
+    @AuthGuard
     async addMessage(@Arg("message") messageIn: MessageCreateInput): Promise<Message | null> {
         console.log("ciao")
         try {
@@ -44,6 +48,7 @@ export class MessageResolver {
     }
 
     @Mutation(() => Boolean, {nullable: false})
+    @AuthGuard
     async deleteMessage(@Arg("id") id: number): Promise<boolean> {
         const message = await Message.findOne({where: {id}});
         if (!message) {
