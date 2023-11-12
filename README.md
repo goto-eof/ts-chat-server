@@ -1,3 +1,8 @@
+# TS Chat Server
+
+Simple chat server implemented with TypeScript, Apollo Server (GraphQL), TypeORM, PostgreSQL, NodeJS, ExpressJS,
+Socket.io..
+
 Install libraries
 
 ```text
@@ -19,8 +24,6 @@ yarn start
 GraphQL endpoint: `http://localhost:4000/grapql`.
 
 Test it by importing the `postman_collection.json` into Postman.
-
-Technologies/Tools: TypeScript, Apollo Server (GraphQL), TypeORM, PostgreSQL, NodeJS, ExpressJS, Socket.io
 
 Some commands
 
