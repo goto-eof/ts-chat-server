@@ -10,6 +10,5 @@ export default function AuthGuard(target: any, propertyKey: string, descriptor: 
         }
         return originalMethod.apply(this, args);
     };
-
     return descriptor;
 }
