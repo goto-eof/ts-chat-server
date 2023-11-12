@@ -1,7 +1,7 @@
 # TS Chat Server
 
 Simple chat server implemented with TypeScript, Apollo Server (GraphQL), TypeORM, PostgreSQL, NodeJS, ExpressJS,
-Socket.io..
+Socket.io.
 
 Install libraries
 
