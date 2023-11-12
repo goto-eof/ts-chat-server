@@ -6,7 +6,6 @@ import {compare, hash} from "bcrypt";
 import {sign} from "jsonwebtoken";
 import UserSignIn from "../input/UserSignIn";
 import UserCreateInput from "../input/UserCreateInput";
-import ApplicationError from "../error/ApplicationError";
 
 export class UserService {
     constructor(public userRepository: Repository<User>) {
@@ -66,12 +65,12 @@ export class UserService {
             })
             return {user: userSaved, jwt: jwtToken};
         } catch (error) {
-            throw new ApplicationError("Unable to save data: " + error);
+            throw new GraphQLError("Unable to save data: " + error);
         }
     }
 
 
-    async deleteUser(id: number){
+    async deleteUser(id: number) {
         const user = await User.findOne({where: {id}});
         if (!user) {
             throw new Error("User not found :|");
