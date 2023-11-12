@@ -1,19 +1,28 @@
 Install libraries
-```javascript
+
+```text
 yarn install
 ```
+
 Start migration
-```javascript
+
+```text
 npx typeorm-ts-node-commonjs migration:run -d src/config/DataSource.ts
 ```
+
 Start application
-```javascript
+
+```text
 yarn start
 ```
+
 Test it using `postman_collection.json`.
 
+Technologies/Tools: TypeScript, Apollo Server (GraphQL), TypeORM, PostgreSQL, NodeJS, ExpressJS, Socket.io
+
 Some commands
-```javascript
+
+```text
 yarn init
 yarn add @types/node typescript
 yarn add -D ts-node
