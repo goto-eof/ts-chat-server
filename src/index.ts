@@ -13,7 +13,8 @@ import {Server, Socket} from "socket.io";
 
 export interface MyContext extends ExpressContext {
     currentUser: UserOutput,
-    authorized: boolean
+    authorized: boolean,
+    io: Server
 }
 
 declare global {
@@ -28,19 +29,7 @@ dotenv.config();
 const startServer = async () => {
     const schema = await buildSchema({resolvers: [MessageResolver, UserResolver]});
 
-    const server = new ApolloServer({
-        schema, context: ({req, res}) => {
-            if (!req.headers?.authorization) {
-                return {currentUser: null, req, authorized: false}
-            }
-            try {
-                const payload = verify(req.headers?.authorization, process.env.JWT_KEY!);
-                return {currentUser: payload, req, authorized: !!payload}
-            } catch (err) {
-                return {currentUser: null, req, authorized: false}
-            }
-        }
-    });
+
     require('dotenv').config();
     AppDataSource.initialize()
         .then(() => {
@@ -50,19 +39,42 @@ const startServer = async () => {
             throw new Error(`'Database connection error: ${err}`);
         });
 
-    await server.start();
     const app = express();
 
     const httpServer = http.createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: "http://127.0.0.1:5500"
+            origin: "http://127.0.0.1:4000"
         }
     })
 
     io.on('connection', (socket) => {
         app.request.socketIo = socket
+        io.on('message', (message: string) => {
+            console.log(`Received message: ${message}`);
+            io.send(`Server received your message: ${message}`);
+        });
+
+        io.on('close', () => {
+            console.log('Client disconnected');
+        });
     })
+
+    const server = new ApolloServer({
+        schema, context: ({req, res}) => {
+            if (!req.headers?.authorization) {
+                return {currentUser: null, req, authorized: false, io: null}
+            }
+            try {
+                const payload = verify(req.headers?.authorization, process.env.JWT_KEY!);
+                return {currentUser: payload, req, authorized: !!payload, io}
+            } catch (err) {
+                return {currentUser: null, req, authorized: false, io: null}
+            }
+        }
+    });
+    await server.start();
+
 
     server.applyMiddleware({app});
 

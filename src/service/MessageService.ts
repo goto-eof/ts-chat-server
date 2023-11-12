@@ -3,6 +3,7 @@ import {AppDataSource} from "../config/DataSource";
 import Message from "../entity/Message";
 import {GraphQLError} from "graphql";
 import MessageCreateInput from "../input/MessageCreateInput";
+import {Server} from "socket.io";
 
 export class MessageService {
     constructor(public userRepository: Repository<Message>) {
@@ -27,7 +28,7 @@ export class MessageService {
             .getMany();
     }
 
-    async createMessage(messageIn: MessageCreateInput) {
+    async createMessage(messageIn: MessageCreateInput, io: Server) {
         try {
             const message = Message.create({
                 fromUser: {id: messageIn.userFrom},
@@ -36,6 +37,13 @@ export class MessageService {
             });
             console.log(message);
             const newMessage = await message.save()
+            if (io) {
+                io.to(`${messageIn.userTo}`).emit('message', {
+                    message,
+                    userFrom: messageIn.userFrom,
+                    userTo: messageIn.userTo
+                })
+            }
             return await Message.findOne({where: {id: newMessage.id}});
         } catch (error) {
             throw new GraphQLError("Unable to save data: " + error);

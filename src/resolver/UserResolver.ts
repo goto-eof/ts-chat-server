@@ -11,7 +11,7 @@ import AuthGuard from "../decorator/AuthGuard";
 export class UserResolver {
     @Query(() => User)
     @AuthGuard
-    async getUser(@Arg("id") id: number) {
+    async getUser(@Ctx() context: MyContext, @Arg("id") id: number) {
         return await userService.getMessage(id);
     }
 
@@ -27,14 +27,13 @@ export class UserResolver {
     }
 
     @Mutation(() => UserOutput, {nullable: true})
-    @AuthGuard
     async addUser(@Arg("user") userIn: UserCreateInput): Promise<UserOutput | null> {
         return await userService.createUser(userIn);
     }
 
     @Mutation(() => Boolean, {nullable: false})
     @AuthGuard
-    async deleteUser(@Arg("id") id: number): Promise<boolean> {
+    async deleteUser(@Ctx() context: MyContext, @Arg("id") id: number): Promise<boolean> {
         return await userService.deleteUser(id);
     }
 
