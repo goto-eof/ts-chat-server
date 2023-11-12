@@ -14,7 +14,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "query retrieveUser{\n    getUser(id: 21){\n        id\n            email\n            username\n\n\n    }\n}",
+						"query": "query retrieveUser{\n    getUser(id: 1){\n            id\n            email\n            username\n    }\n}",
 						"variables": "{\n    \"todo\": {\n        \"text\":\"Ciao mondo\",\n        \"user\": {\n            \"id\":1\n        }\n\n    }\n}"
 					}
 				},
@@ -94,7 +94,13 @@
 			"name": "retrieveUsers",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNpYUBhbWEubmMiLCJpZCI6MSwiaWF0IjoxNjk5ODEyNzQ1LCJleHAiOjE3MDA0MTc1NDV9.qz47Ee9SOMf-6sTP2bA3zkW9btJ9s6KZV00eJyyIlA0",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "graphql",
 					"graphql": {
